@@ -1,0 +1,83 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: battles
+    // Document ID: auto-generated
+    // Fields:
+    //   - userId: string (required) - UID of the user who created the battle
+    //   - attackerAction: string (required)
+    //   - defenderAction: string (required)
+    //   - mapUrl: string (optional)
+    //   - result: map (required)
+    //     - winner: string
+    //     - reasoning: string
+    //     - attackerLosses: string
+    //     - defenderLosses: string
+    //     - attackerRealism: string
+    //     - defenderRealism: string
+    //     - advancement: string
+    //     - atmosphere: string
+    //   - timestamp: timestamp (required)
+    //
+    // ===============================================================
+
+    // Helper Functions
+    function isValidBattle(data) {
+      return data.clientIp is string &&
+             data.attackerNation is string && data.attackerNation.size() < 100 &&
+             data.attackerAction is string && data.attackerAction.size() < 10000 &&
+             data.attackerUnits is string && data.attackerUnits.size() < 1000 &&
+             data.defenderNation is string && data.defenderNation.size() < 100 &&
+             data.defenderAction is string && data.defenderAction.size() < 10000 &&
+             data.defenderUnits is string && data.defenderUnits.size() < 1000 &&
+             data.result is map &&
+             data.timestamp is timestamp;
+    }
+
+    function isValidActionJudgment(data) {
+      return data.clientIp is string &&
+             data.nation is string && data.nation.size() < 100 &&
+             data.category is string && data.category.size() < 50 &&
+             data.action is string && data.action.size() < 10000 &&
+             data.result is map &&
+             data.timestamp is timestamp;
+    }
+
+    function isValidNationStats(data) {
+      return data.clientIp is string &&
+             data.nation is string && data.nation.size() < 100 &&
+             data.year is string && data.year.size() < 20 &&
+             data.stats is map &&
+             data.timestamp is timestamp;
+    }
+
+    match /battles/{battleId} {
+      allow read: if true;
+      allow create: if isValidBattle(request.resource.data);
+      allow update: if false;
+      allow delete: if true; // Allowed for the limit logic
+    }
+
+    match /action_judgments/{id} {
+      allow read: if true;
+      allow create: if isValidActionJudgment(request.resource.data);
+      allow update: if false;
+      allow delete: if true;
+    }
+
+    match /nation_stats/{id} {
+      allow read: if true;
+      allow create: if isValidNationStats(request.resource.data);
+      allow update: if false;
+      allow delete: if true;
+    }
+    
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+  }
+}

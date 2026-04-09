@@ -1,0 +1,5 @@
+{
+  "name": "RP Battle Judge",
+  "description": "AI-powered judge for Discord Geopolitics Roleplay battles. Calculates winners, losses, and territorial advancement.",
+  "requestFramePermissions": []
+}

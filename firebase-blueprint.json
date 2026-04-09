@@ -1,0 +1,127 @@
+{
+  "entities": {
+    "Battle": {
+      "title": "Battle",
+      "description": "A recorded battle between an attacker and a defender.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "clientIp": { "type": "string" },
+        "attackerNation": { "type": "string", "description": "Name of the attacking nation" },
+        "attackerAction": { "type": "string" },
+        "attackerUnits": { "type": "string", "description": "Number and type of units for the attacker" },
+        "defenderNation": { "type": "string", "description": "Name of the defending nation" },
+        "defenderAction": { "type": "string" },
+        "defenderUnits": { "type": "string", "description": "Number and type of units for the defender" },
+        "mapUrl": { "type": "string" },
+        "result": {
+          "type": "object",
+          "properties": {
+            "winner": { "type": "string" },
+            "reasoning": { "type": "string" },
+            "attackerLosses": { "type": "string" },
+            "defenderLosses": { "type": "string" },
+            "attackerRealism": { "type": "string", "description": "Analysis of the attacker's realism" },
+            "defenderRealism": { "type": "string", "description": "Analysis of the defender's realism" },
+            "advancement": { "type": "string" },
+            "atmosphere": { "type": "string" }
+          }
+        },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["clientIp", "attackerAction", "defenderAction", "result", "timestamp"]
+    },
+    "ActionJudgment": {
+      "title": "Action Judgment",
+      "description": "A realism check for a single nation's action.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "clientIp": { "type": "string" },
+        "nation": { "type": "string" },
+        "category": { "type": "string", "description": "Category of the action (Economic, War, etc.)" },
+        "action": { "type": "string" },
+        "result": {
+          "type": "object",
+          "properties": {
+            "verdict": { "type": "string", "description": "Realism verdict (Real vs Sci-Fi)" },
+            "analysis": { "type": "string" },
+            "suggestions": { "type": "string" }
+          }
+        },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["clientIp", "nation", "category", "action", "result", "timestamp"]
+    },
+    "NationStats": {
+      "title": "Nation Stats",
+      "description": "Historical or RP statistics for a nation in a specific year.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "clientIp": { "type": "string" },
+        "nation": { "type": "string" },
+        "year": { "type": "string" },
+        "stats": {
+          "type": "object",
+          "properties": {
+            "capital": { "type": "string" },
+            "governmentType": { "type": "string" },
+            "ruler": { "type": "string" },
+            "totalPopulation": { "type": "string" },
+            "currency": { "type": "string" },
+            "gdp": { "type": "string" },
+            "annualGrowth": { "type": "string" },
+            "unemploymentRate": { "type": "string" },
+            "activePersonnel": { "type": "string" },
+            "reserves": { "type": "string" },
+            "paramilitaries": { "type": "string" },
+            "tanks": { "type": "string" },
+            "lightMilitaryVehicles": { "type": "string" },
+            "afv": { "type": "string" },
+            "selfPropelledArtillery": { "type": "string" },
+            "heavyArtillery": { "type": "string" },
+            "mlrs": { "type": "string" },
+            "navalPersonnel": { "type": "string" },
+            "submarines": { "type": "string" },
+            "aircraftCarriers": { "type": "string" },
+            "helicopterCarriers": { "type": "string" },
+            "destroyers": { "type": "string" },
+            "frigates": { "type": "string" },
+            "battleships": { "type": "string" },
+            "corvettes": { "type": "string" },
+            "patrolShips": { "type": "string" },
+            "mcmv": { "type": "string" },
+            "carrierAircraft": { "type": "string" },
+            "carrierHelicopters": { "type": "string" },
+            "pilots": { "type": "string" },
+            "combatAircraft": { "type": "string" },
+            "groundAttackAircraft": { "type": "string" },
+            "specialMissionAircraft": { "type": "string" },
+            "tankerAircraft": { "type": "string" },
+            "transportAircraft": { "type": "string" },
+            "transportHelicopters": { "type": "string" },
+            "combatHelicopters": { "type": "string" },
+            "nuclearWeapons": { "type": "string" }
+          }
+        },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["clientIp", "nation", "year", "stats", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/battles/{battleId}": {
+      "schema": "Battle",
+      "description": "Collection of all battles judged by the AI."
+    },
+    "/action_judgments/{id}": {
+      "schema": "ActionJudgment",
+      "description": "Collection of single action realism checks."
+    },
+    "/nation_stats/{id}": {
+      "schema": "NationStats",
+      "description": "Collection of nation statistics by year."
+    }
+  }
+}
